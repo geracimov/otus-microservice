@@ -1,0 +1,13 @@
+apiVersion: skaffold/v2beta12
+kind: Config
+metadata:
+  name: simple-http-server
+build:
+  artifacts:
+    - image: geracimov/simple-http-server
+deploy:
+  kubectl:
+    manifests:
+      - deployment.yaml
+      - service.yaml
+      - ingress.yaml
