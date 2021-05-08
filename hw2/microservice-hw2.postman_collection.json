@@ -1,0 +1,421 @@
+{
+	"info": {
+		"_postman_id": "2d777b47-f899-49ec-8082-ba3d90bd43c3",
+		"name": "microservice-hw2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "health",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"",
+							"});",
+							"",
+							"pm.test(\"Status is 'OK'\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.status).to.eql(\"UP\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://arch.homework/otusapp/geracimov/actuator/health",
+					"protocol": "http",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"path": [
+						"otusapp",
+						"geracimov",
+						"actuator",
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user get all",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJSON = JSON.parse(responseBody)",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"",
+							"pm.collectionVariables.set(\"employeesCount\", responseJSON._embedded.employees.length);",
+							"console.log(\"employeesCount \"+ pm.collectionVariables.get(\"employeesCount\"));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://arch.homework/otusapp/geracimov/employees",
+					"protocol": "http",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"path": [
+						"otusapp",
+						"geracimov",
+						"employees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user create",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJSON = JSON.parse(responseBody)",
+							"",
+							"var selflink = pm.response.json()._links.self.href;",
+							"pm.collectionVariables.set(\"createdId\", selflink.substring(selflink.lastIndexOf('/') + 1));",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201]);",
+							"});",
+							"",
+							"pm.test(\"Object created correctly\", function () {",
+							"    pm.expect(responseJSON.firstName).eq(\"some_firstName\");",
+							"    pm.expect(responseJSON.lastName).eq(\"some_lastName\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\": \"some_firstName\",\n    \"lastName\": \"some_lastName\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://arch.homework/otusapp/geracimov/employees",
+					"protocol": "http",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"path": [
+						"otusapp",
+						"geracimov",
+						"employees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user get all aftercreate",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJSON = JSON.parse(responseBody)",
+							"",
+							"pm.test(\"Successful GET request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test(\"Successful inc employees count\", function () {",
+							"    pm.expect(responseJSON._embedded.employees.length).to.be.eq(pm.collectionVariables.get(\"employeesCount\")+1);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://arch.homework/otusapp/geracimov/employees",
+					"protocol": "http",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"path": [
+						"otusapp",
+						"geracimov",
+						"employees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user get by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJSON = JSON.parse(responseBody)",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test(\"Object returned correctly\", function () {",
+							"    var selflink = pm.response.json()._links.self.href;",
+							"    pm.expect(responseJSON.firstName).eq(\"some_firstName\");",
+							"    pm.expect(responseJSON.lastName).eq(\"some_lastName\");",
+							"    pm.expect(selflink.substring(selflink.lastIndexOf('/') + 1)).eq(pm.collectionVariables.get(\"createdId\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://arch.homework/otusapp/geracimov/employees/{{createdId}}",
+					"protocol": "http",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"path": [
+						"otusapp",
+						"geracimov",
+						"employees",
+						"{{createdId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user replace by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJSON = JSON.parse(responseBody)",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test(\"Object replaced correctly\", function () {",
+							"    pm.expect(responseJSON.firstName).eq(\"some_firstName_updated\");",
+							"    pm.expect(responseJSON.lastName).eq(null);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\": \"some_firstName_updated\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://arch.homework/otusapp/geracimov/employees/{{createdId}}",
+					"protocol": "http",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"path": [
+						"otusapp",
+						"geracimov",
+						"employees",
+						"{{createdId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user update by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJSON = JSON.parse(responseBody)",
+							"",
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test(\"Object updated correctly\", function () {",
+							"    pm.expect(responseJSON.firstName).eq(\"some_firstName_updated\");",
+							"    pm.expect(responseJSON.lastName).eq(\"some_lastName_updated_again\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"lastName\": \"some_lastName_updated_again\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://arch.homework/otusapp/geracimov/employees/{{createdId}}",
+					"protocol": "http",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"path": [
+						"otusapp",
+						"geracimov",
+						"employees",
+						"{{createdId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user delete",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([204]);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://arch.homework/otusapp/geracimov/employees/{{createdId}}",
+					"protocol": "http",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"path": [
+						"otusapp",
+						"geracimov",
+						"employees",
+						"{{createdId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user get all after delete",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseJSON = JSON.parse(responseBody)",
+							"",
+							"pm.test(\"Successful GET request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200]);",
+							"});",
+							"",
+							"pm.test(\"Successful inc employees count\", function () {",
+							"    pm.expect(responseJSON._embedded.employees.length).to.be.eq(pm.collectionVariables.get(\"employeesCount\"));",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://arch.homework/otusapp/geracimov/employees",
+					"protocol": "http",
+					"host": [
+						"arch",
+						"homework"
+					],
+					"path": [
+						"otusapp",
+						"geracimov",
+						"employees"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "createdId",
+			"value": ""
+		},
+		{
+			"key": "employeesCount",
+			"value": ""
+		}
+	]
+}

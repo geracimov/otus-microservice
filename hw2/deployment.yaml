@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-crud-mongo-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: simple-crud-mongo-label
+  template:
+    metadata:
+      labels:
+        app: simple-crud-mongo-label
+    spec:
+      containers:
+        - name: simple-crud-mongo
+          image: geracimov/simple-crud-mongo:v0.0.1
+          env:
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: simple-crud-mongo-uri-secret
+                  key: MONGO_URI
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /employees
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
