@@ -1,0 +1,9 @@
+server:
+  port: 9001
+
+spring:
+  application:
+    name: user-service
+  data:
+    mongodb:
+      uri: mongodb://admin:pass@localhost:27017/user_mongo_db?authSource=admin

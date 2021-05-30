@@ -10,7 +10,7 @@
     <version>1.0</version>
     <modules>
         <module>auth-service</module>
-        <module>auth-service</module>
+        <module>user-service</module>
     </modules>
 
     <parent>
