@@ -1,6 +1,5 @@
 package ru.geracimov.otus.microservice.authjwt.gateway.config;
 
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -55,9 +54,9 @@ public class AuthenticationFilter implements GatewayFilter {
     }
 
     private void populateRequestWithHeaders(ServerWebExchange exchange, String token) {
-        Claims claims = jwtUtil.getAllClaimsFromToken(token);
+        var claims = jwtUtil.getAllClaimsFromToken(token);
         exchange.getRequest().mutate()
-                .header("sub", String.valueOf(claims.get("id")))
+                .header("sub", String.valueOf(claims.get("sub")))
                 .header("role", String.valueOf(claims.get("role")))
                 .build();
     }

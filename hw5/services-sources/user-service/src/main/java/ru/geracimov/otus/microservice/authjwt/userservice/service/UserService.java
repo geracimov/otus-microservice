@@ -7,6 +7,8 @@ import java.util.Collection;
 
 public interface UserService {
 
+    User getUserById(ObjectId id);
+
     User getUserById(ObjectId id, String plainPass);
 
     Collection<User> getAllUsers();

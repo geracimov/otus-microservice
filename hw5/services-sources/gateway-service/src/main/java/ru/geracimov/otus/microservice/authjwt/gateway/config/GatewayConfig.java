@@ -14,13 +14,13 @@ public class GatewayConfig {
     @Bean
     public RouteLocator routes(RouteLocatorBuilder builder) {
         return builder.routes()
-                .route("user-service", r -> r.path("/users/**")
+                .route("user-service", r -> r.path("/user/**")
                         .filters(f -> f.filter(filter))
-                        .uri("http://user-service:9091"))
+                        .uri("http://user-service:9001"))
 
                 .route("auth-service", r -> r.path("/auth/**")
                         .filters(f -> f.filter(filter))
-                        .uri("http://auth-service:9092"))
+                        .uri("http://auth-service:9002"))
                 .build();
     }
 

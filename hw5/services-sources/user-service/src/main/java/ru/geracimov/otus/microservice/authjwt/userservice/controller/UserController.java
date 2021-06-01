@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.geracimov.otus.microservice.authjwt.userservice.domain.User;
 import ru.geracimov.otus.microservice.authjwt.userservice.dto.UserCreateRequest;
 import ru.geracimov.otus.microservice.authjwt.userservice.dto.UserResponse;
+import ru.geracimov.otus.microservice.authjwt.userservice.exception.AccessDeniedException;
 import ru.geracimov.otus.microservice.authjwt.userservice.service.UserService;
 
 import java.util.Collection;
@@ -20,6 +21,14 @@ public class UserController {
     @GetMapping
     public Collection<UserResponse> getAllUsers() {
         return userService.getAllUsers().stream().map(UserResponse::of).collect(Collectors.toList());
+    }
+
+    @GetMapping("/{id}")
+    public UserResponse getUser(@PathVariable ObjectId id, @RequestHeader("sub") String subject) {
+        if (!id.toString().equals(subject)) {
+            throw new AccessDeniedException("ddd");
+        }
+        return UserResponse.of(userService.getUserById(id));
     }
 
     @GetMapping("/{id}/{plainPass}")

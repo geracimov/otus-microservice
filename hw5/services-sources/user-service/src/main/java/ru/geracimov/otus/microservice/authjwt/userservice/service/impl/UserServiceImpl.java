@@ -18,6 +18,11 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
+    public User getUserById(ObjectId id) {
+        return userRepository.getUserById(id).orElseThrow(()-> new UserNotFoundException("nfe"));
+    }
+
+    @Override
     public User getUserById(ObjectId id, String plainPass) {
         Optional<User> userById = userRepository.getUserById(id);
         if (userById.isEmpty() || !passwordIsCorrect(plainPass, userById.get()))
