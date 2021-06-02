@@ -4,8 +4,8 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ru.geracimov.otus.microservice.authjwt.gateway.JwtExpiredException;
-import ru.geracimov.otus.microservice.authjwt.gateway.JwtInvalidException;
+import ru.geracimov.otus.microservice.authjwt.gateway.exception.JwtExpiredException;
+import ru.geracimov.otus.microservice.authjwt.gateway.exception.JwtInvalidException;
 
 import javax.annotation.PostConstruct;
 import java.security.Key;

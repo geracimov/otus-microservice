@@ -24,9 +24,9 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserResponse getUser(@PathVariable ObjectId id, @RequestHeader("sub") String subject) {
+    public UserResponse getUser(@PathVariable ObjectId id, @RequestHeader("X-subject") String subject) {
         if (!id.toString().equals(subject)) {
-            throw new AccessDeniedException("ddd");
+            throw new AccessDeniedException("Access denied");
         }
         return UserResponse.of(userService.getUserById(id));
     }

@@ -13,9 +13,7 @@ public class RouterValidator {
             "/auth/login"
     );
 
-    Predicate<ServerHttpRequest> isSecured =
-            request -> OPEN_API_ENDPOINTS
-                    .stream()
-                    .noneMatch(uri -> request.getURI().getPath().contains(uri));
+    Predicate<ServerHttpRequest> isSecured = request -> OPEN_API_ENDPOINTS.stream()
+            .noneMatch(uri -> request.getURI().getPath().contains(uri));
 
 }
