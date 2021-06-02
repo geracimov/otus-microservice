@@ -1,4 +1,4 @@
-package ru.geracimov.otus.microservice.authjwt.gateway;
+package ru.geracimov.otus.microservice.authjwt.gateway.exception;
 
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
