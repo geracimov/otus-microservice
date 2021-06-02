@@ -3,9 +3,10 @@ package ru.geracimov.otus.microservice.authjwt.authservice.service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.geracimov.otus.microservice.authjwt.authservice.dto.UserResponse;
+import ru.geracimov.otus.microservice.authjwt.authservice.config.JwtProperties;
+import ru.geracimov.otus.microservice.authjwt.authservice.dto.UserCreateResponse;
 
 import javax.annotation.PostConstruct;
 import java.security.Key;
@@ -14,36 +15,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
+@RequiredArgsConstructor
 public class JwtUtil {
-
-    @Value("${jwt.secret}")
-    private String secret;
-
-    @Value("${jwt.expiration}")
-    private String expirationTime;
-
+    private final JwtProperties props;
     private Key key;
 
     @PostConstruct
     public void init() {
-        this.key = Keys.hmacShaKeyFor(secret.getBytes());
+        this.key = Keys.hmacShaKeyFor(props.getSecret().getBytes());
     }
 
     public Claims getAllClaimsFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
-
     public Date getExpirationDateFromToken(String token) {
         return getAllClaimsFromToken(token).getExpiration();
     }
 
-    private Boolean isTokenExpired(String token) {
-       var expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date());
-    }
-
-    public String generate(UserResponse user, String type) {
+    public String generate(UserCreateResponse user, String type) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("firstName", user.getFirstName());
         claims.put("lastName", user.getLastName());
@@ -54,9 +44,9 @@ public class JwtUtil {
     private String generateToken(Map<String, Object> claims, String username, String type) {
         long expirationTimeLong;
         if ("ACCESS".equals(type)) {
-            expirationTimeLong = Long.parseLong(expirationTime) * 1000;
+            expirationTimeLong = props.getExpiration() * 1000L;
         } else {
-            expirationTimeLong = Long.parseLong(expirationTime) * 1000 * 5;
+            expirationTimeLong = props.getExpiration() * 1000L * 5;
         }
         var createdDate = new Date();
         var expirationDate = new Date(createdDate.getTime() + expirationTimeLong);
@@ -70,7 +60,13 @@ public class JwtUtil {
                 .compact();
     }
 
-    public Boolean validateToken(String token) {
+    private boolean isTokenExpired(String token) {
+        var expiration = getExpirationDateFromToken(token);
+        return expiration.before(new Date());
+    }
+
+    @SuppressWarnings("unused")
+    public boolean validateToken(String token) {
         return !isTokenExpired(token);
     }
 

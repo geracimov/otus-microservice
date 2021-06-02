@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.geracimov.otus.microservice.authjwt.authservice.dto.AuthRequest;
 import ru.geracimov.otus.microservice.authjwt.authservice.dto.AuthResponse;
 import ru.geracimov.otus.microservice.authjwt.authservice.dto.UserCreateRequest;
-import ru.geracimov.otus.microservice.authjwt.authservice.dto.UserResponse;
+import ru.geracimov.otus.microservice.authjwt.authservice.dto.UserCreateResponse;
 import ru.geracimov.otus.microservice.authjwt.authservice.service.AuthService;
 
 @RestController
@@ -19,8 +19,8 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping(value = "/register")
-    public ResponseEntity<UserResponse> register(@RequestBody UserCreateRequest authRequest) {
-        return ResponseEntity.ok(authService.register(authRequest));
+    public ResponseEntity<UserCreateResponse> register(@RequestBody UserCreateRequest userCreateRequest) {
+        return ResponseEntity.ok(authService.register(userCreateRequest));
     }
 
     @PostMapping(value = "/login")
