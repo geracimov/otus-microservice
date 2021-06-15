@@ -1,0 +1,5 @@
+FROM bellsoft/liberica-openjdk-alpine:11
+WORKDIR /opt/user-service
+EXPOSE 9001
+COPY user-service/target/user-service-1.0.jar user-service.jar
+CMD java -jar user-service.jar

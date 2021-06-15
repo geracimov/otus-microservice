@@ -1,0 +1,5 @@
+FROM bellsoft/liberica-openjdk-alpine:11
+WORKDIR /opt/auth-service
+EXPOSE 9002
+COPY auth-service/target/auth-service-1.0.jar auth-service.jar
+CMD java -jar auth-service.jar

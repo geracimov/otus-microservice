@@ -1,0 +1,5 @@
+FROM bellsoft/liberica-openjdk-alpine:11
+WORKDIR /opt/gateway-service
+EXPOSE 9002
+COPY gateway-service/target/gateway-service-1.0.jar gateway-service.jar
+CMD java -jar gateway-service.jar
